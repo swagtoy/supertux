@@ -1042,9 +1042,9 @@ Editor::retoggle_undo_tracking()
   {
     // Add undo/redo button widgets.
     auto undo_button_widget = std::make_unique<ButtonWidget>("images/engine/editor/undo.png",
-        Vector(10, 10), [this]{ undo(); });
+        Vector(10, 50), [this]{ undo(); });
     auto redo_button_widget = std::make_unique<ButtonWidget>("images/engine/editor/redo.png",
-        Vector(60, 10), [this]{ redo(); });
+        Vector(60, 50), [this]{ redo(); });
 
     m_undo_widget = undo_button_widget.get();
     m_redo_widget = redo_button_widget.get();
