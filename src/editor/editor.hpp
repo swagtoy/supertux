@@ -26,8 +26,10 @@
 #include "editor/overlay_widget.hpp"
 #include "editor/tilebox.hpp"
 #include "editor/toolbox_widget.hpp"
+#include "editor/menubar_widget.hpp"
 #include "editor/layers_widget.hpp"
 #include "editor/scroller_widget.hpp"
+#include "menubar_widget.hpp"
 #include "supertux/screen.hpp"
 #include "supertux/world.hpp"
 #include "util/currenton.hpp"
@@ -224,6 +226,7 @@ private:
   EditorOverlayWidget* m_overlay_widget;
   EditorToolboxWidget* m_toolbox_widget;
   EditorLayersWidget* m_layers_widget;
+  EditorMenubarWidget* m_menubar_widget;
 
   bool m_enabled;
   SurfacePtr m_bgr_surface;

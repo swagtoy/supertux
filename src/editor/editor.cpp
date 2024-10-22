@@ -15,7 +15,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "editor/editor.hpp"
+#include "menubar_widget.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <limits>
@@ -122,6 +124,7 @@ Editor::Editor() :
   m_overlay_widget(),
   m_toolbox_widget(),
   m_layers_widget(),
+  m_menubar_widget(),
   m_enabled(false),
   m_bgr_surface(Surface::from_file("images/engine/menu/bg_editor.png")),
   m_time_since_last_save(0.f),
@@ -130,17 +133,21 @@ Editor::Editor() :
   m_ctrl_pressed(false),
   m_mouse_pos(0.f, 0.f)
 {
+  // TODO wtf? Allocate these things directly in the vector, then set pointers as needed. Not this shit.
   auto toolbox_widget = std::make_unique<EditorToolboxWidget>(*this);
   auto layers_widget = std::make_unique<EditorLayersWidget>(*this);
   auto overlay_widget = std::make_unique<EditorOverlayWidget>(*this);
+  auto menubar_widget = std::make_unique<EditorMenubarWidget>(*this);
 
   m_toolbox_widget = toolbox_widget.get();
   m_layers_widget = layers_widget.get();
   m_overlay_widget = overlay_widget.get();
+  m_menubar_widget = menubar_widget.get();
 
   m_widgets.push_back(std::move(toolbox_widget));
   m_widgets.push_back(std::move(layers_widget));
   m_widgets.push_back(std::move(overlay_widget));
+  m_widgets.push_back(std::move(menubar_widget));
 }
 
 Editor::~Editor()
@@ -608,8 +615,8 @@ void
 Editor::quit_editor()
 {
   m_quit_request = false;
-
-  auto quit = [this] ()
+  
+  check_unsaved_changes([this] ()
   {
     remove_autosave_file();
 
@@ -627,10 +634,6 @@ Editor::quit_editor()
     if (!persistent)
       Dialog::show_message(_("Don't forget that your levels and assets\naren't saved between sessions!\nIf you want to keep your levels, download them\nfrom the \"Manage Assets\" menu."));
 #endif
-  };
-
-  check_unsaved_changes([quit] {
-    quit();
   });
 }
 
