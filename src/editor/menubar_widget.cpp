@@ -29,12 +29,23 @@ EditorMenubarWidget::EditorMenubarWidget(Editor& editor) :
 	m_rect(-CORNER_RADIUS, -CORNER_RADIUS, 500.0f, 40.0f)
 {
 }
-
+#include "supertux/resources.hpp"
 void
 EditorMenubarWidget::draw(DrawingContext& context)
 {
   context.color().draw_filled_rect(m_rect, Color(114.0f, 135.0f, 176.0f, 0.75f), CORNER_RADIUS,
                                    LAYER_GUI-5);
+
+  // Would move to update function later, just a stub.
+  std::list<char const*> things = {"File", "Edit", "Stuff", "AI", "Tools", "Help"};
+  
+  int i = 0;
+ 	for (auto str: things)
+	{
+		
+		context.color().draw_text(Resources::normal_font, str, Vector(20.0f+(i*80), 10.0f), ALIGN_LEFT, 999999, Color(0.0f, 0.0f, 0.0f, 1.0f));
+		++i;
+	}
 }
 
 void
