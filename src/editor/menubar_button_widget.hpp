@@ -14,25 +14,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_EDITOR_MENUBAR_WIDGET_HPP
-#define HEADER_SUPERTUX_EDITOR_MENUBAR_WIDGET_HPP
+#ifndef HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
+#define HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
 
 #include "editor/widget.hpp"
-#include "editor/menubar_button_widget.hpp"
 
 #include <functional>
-#include <vector>
+#include <string>
 
 #include "math/rectf.hpp"
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 
 class Editor;
+class EditorMenubarWidget;
 
-class EditorMenubarWidget : public Widget
+class EditorMenubarButtonWidget : public Widget
 {
 public:
-  EditorMenubarWidget(Editor& editor);
+  EditorMenubarButtonWidget(EditorMenubarWidget& menubar, const std::string& text);
 
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;
@@ -45,16 +45,15 @@ public:
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
 
 private:
-  Editor& m_editor;
+  EditorMenubarWidget& m_menubar;
   Rectf m_rect;
-  // i.e.  File    Edit    View     AI     Junk    Garbage
-  std::vector<EditorMenubarButtonWidget> m_buttons;
   
   
-  EditorMenubarWidget(const EditorMenubarWidget&) = delete;
-  EditorMenubarWidget& operator=(const EditorMenubarWidget&) = delete;
+  EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
+  EditorMenubarButtonWidget& operator=(const EditorMenubarButtonWidget&) = delete;
 };
 
 #endif
 
 /* EOF */
+

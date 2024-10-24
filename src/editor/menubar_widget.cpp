@@ -24,6 +24,7 @@
 
 EditorMenubarWidget::EditorMenubarWidget(Editor& editor) :
 	m_editor{editor},
+	m_buttons{},
 	// -20.0f is a hack for rounding
 	m_rect(-g_config->menuroundness, -g_config->menuroundness, 500.0f, 40.0f)
 {
@@ -56,6 +57,13 @@ EditorMenubarWidget::update(float dt_sec)
 void
 EditorMenubarWidget::setup()
 {
+	auto menubar_add = [&](const std::string& text) { m_buttons.push_back(EditorMenubarButtonWidget(*this, text)); };
+	
+	menubar_add("File");
+	menubar_add("Edit");
+	menubar_add("AI");
+	menubar_add("Info");
+	menubar_add("Help");
 }
 
 void
