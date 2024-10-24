@@ -33,6 +33,12 @@
 #include "util/gettext.hpp"
 #include "util/log.hpp"
 
+// Tmp stuff
+#include "supertux/constants.hpp"
+#include "supertux/level.hpp"
+#include "supertux/sector.hpp"
+#include "supertux/sector_parser.hpp"
+
 EditorLevelsetSelectMenu::EditorLevelsetSelectMenu() :
   m_contrib_worlds()
 {
@@ -54,6 +60,35 @@ EditorLevelsetSelectMenu::~EditorLevelsetSelectMenu()
 void
 EditorLevelsetSelectMenu::initialize()
 {
+
+  std::unique_ptr<Level> temp_lvl = std::make_unique<Level>(false);
+  Statistics::Preferences stat_preferences;
+  temp_lvl->m_name = "temp";
+  temp_lvl->m_author = "Anonymouse";
+  //temp_lvl->m_filename = "temp.lvl";
+  temp_lvl->m_license = "CC-BY-SA 4.0 International";
+  temp_lvl->m_tileset = "images/tiles.strf";
+  temp_lvl->m_note = "Its.";
+  temp_lvl->m_icon = "";
+  temp_lvl->m_contact = "localhost";
+  temp_lvl->m_is_worldmap = false;
+  temp_lvl->m_suppress_pause_menu = false;
+  temp_lvl->m_is_in_cutscene = false;
+  stat_preferences.enable_badguys = true;
+  stat_preferences.enable_coins = true;
+  stat_preferences.enable_secrets = true;
+
+  auto sector = SectorParser::from_nothing(*temp_lvl);
+  sector->set_name(DEFAULT_SECTOR_NAME);
+  temp_lvl->add_sector(std::move(sector));
+  temp_lvl->initialize(stat_preferences);
+  
+  
+  Editor::current()->m_reload_request = true;
+  Editor::current()->set_level(std::move(temp_lvl), true);
+  //return;
+  
+
   Editor::current()->m_deactivate_request = true;
   m_contrib_worlds.clear();
 

@@ -16,6 +16,7 @@
 
 #include "supertux/menu/editor_level_select_menu.hpp"
 
+#include <memory>
 #include <physfs.h>
 
 #include "editor/editor.hpp"
@@ -162,6 +163,7 @@ EditorLevelSelectMenu::open_level(const std::string& filename)
     editor->set_world(std::move(m_world));
 
   editor->set_level(filename);
+  
   MenuManager::instance().clear_menu_stack();
 }
 

@@ -20,30 +20,30 @@
 #include "supertux/globals.hpp"
 #include "video/viewport.hpp"
 #include "video/video_system.hpp"
-
-constexpr int CORNER_RADIUS = 15.0f;
+#include "supertux/resources.hpp"
 
 EditorMenubarWidget::EditorMenubarWidget(Editor& editor) :
 	m_editor{editor},
 	// -20.0f is a hack for rounding
-	m_rect(-CORNER_RADIUS, -CORNER_RADIUS, 500.0f, 40.0f)
+	m_rect(-g_config->menuroundness, -g_config->menuroundness, 500.0f, 40.0f)
 {
 }
-#include "supertux/resources.hpp"
+
 void
 EditorMenubarWidget::draw(DrawingContext& context)
 {
-  context.color().draw_filled_rect(m_rect, Color(114.0f, 135.0f, 176.0f, 0.75f), CORNER_RADIUS,
+  context.color().draw_filled_rect(m_rect, g_config->editorcolor, g_config->menuroundness,
                                    LAYER_GUI-5);
 
   // Would move to update function later, just a stub.
   std::list<char const*> things = {"File", "Edit", "Stuff", "AI", "Tools", "Help"};
   
+  
   int i = 0;
- 	for (auto str: things)
+  for (auto str: things)
 	{
 		
-		context.color().draw_text(Resources::normal_font, str, Vector(20.0f+(i*80), 10.0f), ALIGN_LEFT, 999999, Color(0.0f, 0.0f, 0.0f, 1.0f));
+		context.color().draw_text(Resources::normal_font, str, Vector(20.0f+(i*80), 10.0f), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
 		++i;
 	}
 }

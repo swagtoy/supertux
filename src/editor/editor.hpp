@@ -169,9 +169,9 @@ public:
 
   void pack_addon();
 
+  void set_level(std::unique_ptr<Level> level, bool reset = true);
 private:
   void set_sector(Sector* sector);
-  void set_level(std::unique_ptr<Level> level, bool reset = true);
   void reload_level();
   void quit_editor();
   /**
