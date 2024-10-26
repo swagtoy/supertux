@@ -32,8 +32,9 @@ class EditorMenubarWidget;
 class EditorMenubarButtonWidget : public Widget
 {
 public:
-  EditorMenubarButtonWidget(EditorMenubarWidget& menubar, const std::string& text);
-
+  EditorMenubarButtonWidget(const std::string& text, unsigned& x_pos_inc);
+  EditorMenubarButtonWidget(EditorMenubarButtonWidget&&) {};
+  
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;
 
@@ -45,11 +46,10 @@ public:
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
 
 private:
-  EditorMenubarWidget& m_menubar;
+  std::string m_text;
   Rectf m_rect;
   
-  
-  EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
+  //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
   EditorMenubarButtonWidget& operator=(const EditorMenubarButtonWidget&) = delete;
 };
 

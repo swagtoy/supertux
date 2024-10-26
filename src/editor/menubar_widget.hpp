@@ -32,7 +32,8 @@ class Editor;
 class EditorMenubarWidget : public Widget
 {
 public:
-  EditorMenubarWidget(Editor& editor);
+  EditorMenubarWidget();
+  ~EditorMenubarWidget() = default;
 
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;
@@ -45,7 +46,6 @@ public:
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
 
 private:
-  Editor& m_editor;
   Rectf m_rect;
   // i.e.  File    Edit    View     AI     Junk    Garbage
   std::vector<EditorMenubarButtonWidget> m_buttons;

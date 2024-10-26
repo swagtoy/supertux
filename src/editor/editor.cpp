@@ -137,7 +137,7 @@ Editor::Editor() :
   auto toolbox_widget = std::make_unique<EditorToolboxWidget>(*this);
   auto layers_widget = std::make_unique<EditorLayersWidget>(*this);
   auto overlay_widget = std::make_unique<EditorOverlayWidget>(*this);
-  auto menubar_widget = std::make_unique<EditorMenubarWidget>(*this);
+  auto menubar_widget = std::make_unique<EditorMenubarWidget>();
 
   m_toolbox_widget = toolbox_widget.get();
   m_layers_widget = layers_widget.get();
@@ -817,8 +817,10 @@ Editor::setup()
       MenuManager::instance().push_menu(MenuStorage::EDITOR_LEVELSET_SELECT_MENU);
     }
   }
-  m_toolbox_widget->setup();
-  m_layers_widget->setup();
+  
+  for (auto& widget : m_widgets) {
+	  widget->setup();
+  }
 
   // Reactivate the editor after level test.
   if (m_leveltested) {

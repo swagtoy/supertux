@@ -21,9 +21,9 @@
 #include "video/viewport.hpp"
 #include "video/video_system.hpp"
 #include "supertux/resources.hpp"
+#include "util/log.hpp"
 
-EditorMenubarWidget::EditorMenubarWidget(Editor& editor) :
-	m_editor{editor},
+EditorMenubarWidget::EditorMenubarWidget() :
 	m_buttons{},
 	// -20.0f is a hack for rounding
 	m_rect(-g_config->menuroundness, -g_config->menuroundness, 500.0f, 40.0f)
@@ -33,19 +33,12 @@ EditorMenubarWidget::EditorMenubarWidget(Editor& editor) :
 void
 EditorMenubarWidget::draw(DrawingContext& context)
 {
-  context.color().draw_filled_rect(m_rect, g_config->editorcolor, g_config->menuroundness,
+	context.color().draw_filled_rect(m_rect, g_config->editorcolor, g_config->menuroundness,
                                    LAYER_GUI-5);
 
-  // Would move to update function later, just a stub.
-  std::list<char const*> things = {"File", "Edit", "Stuff", "AI", "Tools", "Help"};
-  
-  
-  int i = 0;
-  for (auto str: things)
+	for (auto& button: m_buttons)
 	{
-		
-		context.color().draw_text(Resources::normal_font, str, Vector(20.0f+(i*80), 10.0f), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
-		++i;
+		button.draw(context);
 	}
 }
 
@@ -57,7 +50,11 @@ EditorMenubarWidget::update(float dt_sec)
 void
 EditorMenubarWidget::setup()
 {
-	auto menubar_add = [&](const std::string& text) { m_buttons.push_back(EditorMenubarButtonWidget(*this, text)); };
+	unsigned x_pos = 0;
+	auto menubar_add = [&](const std::string& text) {
+		//EditorMenubarButtonWidget btn{*this, text, x_pos};
+		m_buttons.emplace_back(text, x_pos);
+	};
 	
 	menubar_add("File");
 	menubar_add("Edit");
