@@ -50,7 +50,7 @@ EditorMenubarWidget::update(float dt_sec)
 void
 EditorMenubarWidget::setup()
 {
-	unsigned x_pos = 0;
+	float x_pos = 0;
 	auto menubar_add = [&](const std::string& text) {
 		//EditorMenubarButtonWidget btn{*this, text, x_pos};
 		m_buttons.emplace_back(text, x_pos);

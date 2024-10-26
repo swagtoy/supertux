@@ -32,7 +32,7 @@ class EditorMenubarWidget;
 class EditorMenubarButtonWidget : public Widget
 {
 public:
-  EditorMenubarButtonWidget(const std::string& text, unsigned& x_pos_inc);
+  EditorMenubarButtonWidget(const std::string& text, float& x_pos_inc);
   EditorMenubarButtonWidget(EditorMenubarButtonWidget&&) {};
   
   virtual void draw(DrawingContext& context) override;
@@ -47,7 +47,7 @@ public:
 
 private:
   std::string m_text;
-  Rectf m_rect;
+  float x_pos;
   
   //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
   EditorMenubarButtonWidget& operator=(const EditorMenubarButtonWidget&) = delete;
