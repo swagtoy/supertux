@@ -24,6 +24,7 @@
 #include <glm/gtx/io.hpp>
 
 using Vector = glm::vec2;
+using Vectori = glm::ivec2;
 
 namespace math {
 

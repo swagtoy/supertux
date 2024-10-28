@@ -22,63 +22,57 @@
 #include <algorithm>
 #include <tuple>
 #include <SDL.h>
+#include <type_traits>
 
 #include "math/size.hpp"
 
-class Rectf;
-
-class Rect final
+template<typename T>
+class Rect_t
 {
 public:
-  int left;
-  int top;
-  int right;
-  int bottom;
-
-public:
-  static Rect from_center(int center_x, int center_y, int width, int height)
+  static Rect_t<T> from_center(T center_x, T center_y, T width, T height)
   {
-    return Rect(center_x - width / 2,
-                center_y - height / 2,
-                center_x + width / 2,
-                center_y + height / 2);
+      return {center_x - width / static_cast<T>(2),
+              center_y - height / static_cast<T>(2),
+              center_x + width / static_cast<T>(2),
+              center_y + height / static_cast<T>(2)};
   }
 
 public:
-  Rect() :
+  Rect_t() :
     left(0),
     top(0),
     right(0),
     bottom(0)
   {}
 
-  Rect(const Rect& rhs) = default;
-  Rect& operator=(const Rect& rhs) = default;
+  Rect_t(const Rect_t& rhs) = default;
+  Rect_t& operator=(const Rect_t& rhs) = default;
 
-  Rect(int left_, int top_, int right_, int bottom_) :
+  Rect_t(T left_, T top_, T right_, T bottom_) :
     left(left_),
     top(top_),
     right(right_),
     bottom(bottom_)
   {}
 
-  Rect(int left_, int top_, const Size& size) :
+  Rect_t(T left_, T top_, const Size& size) :
     left(left_),
     top(top_),
     right(left_ + size.width),
     bottom(top_ + size.height)
   {}
 
-  Rect(const SDL_Rect& rect) :
+  Rect_t(const SDL_Rect& rect) :
     left(rect.x),
     top(rect.y),
     right(rect.x + rect.w),
     bottom(rect.y + rect.h)
   {}
 
-  explicit Rect(const Rectf& other);
+  //explicit Rect_t(const Rect_tf& other);
 
-  bool operator==(const Rect& other) const
+  bool operator==(const Rect_t& other) const
   {
     return (left == other.left &&
             top == other.top &&
@@ -86,27 +80,27 @@ public:
             bottom == other.bottom);
   }
 
-  bool contains(int x, int y) const
+  bool contains(T x, T y) const
   {
     return (left <= x && x < right &&
             top <= y && y < bottom);
   }
 
-  bool contains(const Rect& other) const
+  bool contains(const Rect_t& other) const
   {
     return (left <= other.left && other.right <= right &&
             top <= other.top && other.bottom <= bottom);
   }
 
-  const int& get_left() const { return left; }
-  const int& get_right() const { return right; }
-  const int& get_top() const { return top; }
-  const int& get_bottom() const { return bottom; }
+  const T& get_left() const { return left; }
+  const T& get_right() const { return right; }
+  const T& get_top() const { return top; }
+  const T& get_bottom() const { return bottom; }
 
-  int get_width()  const { return right - left; }
-  int get_height() const { return bottom - top; }
+  T get_width()  const { return right - left; }
+  T get_height() const { return bottom - top; }
   Size get_size() const { return Size(right - left, bottom - top); }
-  int get_area() const { return get_width() * get_height(); }
+  T get_area() const { return get_width() * get_height(); }
 
   bool empty() const
   {
@@ -119,42 +113,52 @@ public:
     return left <= right && top <= bottom;
   }
 
-  Rect normalized() const
+  Rect_t normalized() const
   {
-    return Rect(std::min(left, right),
-                std::min(top, bottom),
-                std::max(left, right),
-                std::max(top, bottom));
+    return {std::min(left, right),
+            std::min(top, bottom),
+            std::max(left, right),
+			std::max(top, bottom)};
   }
 
-  Rect moved(int x, int y) const
+  Rect_t moved(T x, T y) const
   {
-    return Rect(left + x,
-                top + y,
-                right + x,
-                bottom + y);
+    return {left + x,
+            top + y,
+            right + x,
+            bottom + y};
   }
 
-  Rect grown(int border) const
+  Rect_t grown(T border) const
   {
-    return Rect(left - border,
-                top - border,
-                right + border,
-                bottom + border);
+    return {left - border,
+            top - border,
+            right + border,
+            bottom + border};
   }
 
-  Rectf to_rectf() const;
+  Rect_t<float> to_rectf() const;
   SDL_Rect to_sdl() const
   {
     return { left, top, get_width(), get_height() };
   }
 
-  bool operator<(const Rect& other) const {
+  bool operator<(const Rect_t& other) const {
     return std::tie(left, top, right, bottom) < std::tie(other.left, other.top, other.right, other.bottom);
   }
+  
+private:
+  Vectori<T> m_p1;
+  T left;
+  T top;
+  T right;
+  T bottom;
 };
 
-std::ostream& operator<<(std::ostream& out, const Rect& rect);
+//std::ostream& operator<<(std::ostream& out, const Rect_t& rect);
+
+using Rect = Rect_t<int>;
+using Rectf = Rect_t<float>;
 
 #endif
 

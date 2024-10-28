@@ -44,4 +44,6 @@ std::ostream& operator<<(std::ostream& out, const Rect& rect)
   return out;
 }
 
+std::string Rect::
+
 /* EOF */
