@@ -19,48 +19,47 @@
 
 #include <iosfwd>
 
-class Sizef;
-
-class Size final
+template<typename T>
+class Size_t final
 {
 public:
-  Size() :
-    width(0),
-    height(0)
+  Size_t() :
+    width(static_cast<T>(0)),
+    height(static_cast<T>(0))
   {}
 
-  Size(int width_, int height_) :
+  Size_t(T width_, T height_) :
     width(width_),
     height(height_)
   {}
 
-  Size(const Size& rhs) = default;
-  Size& operator=(const Size& rhs) = default;
+  Size_t(const Size_t& rhs) = default;
+  Size_t& operator=(const Size_t& rhs) = default;
 
-  explicit Size(const Sizef& rhs);
+  explicit Size_t<int>(const Size_t<float>& rhs);
 
-  Size& operator*=(int factor)
+  Size_t& operator*=(T factor)
   {
     width  *= factor;
     height *= factor;
     return *this;
   }
 
-  Size& operator/=(int divisor)
+  Size_t& operator/=(T divisor)
   {
     width  /= divisor;
     height /= divisor;
     return *this;
   }
 
-  Size& operator+=(const Size& rhs)
+  Size_t& operator+=(const Size_t& rhs)
   {
     width  += rhs.width;
     height += rhs.height;
     return *this;
   }
 
-  Size& operator-=(const Size& rhs)
+  Size_t& operator-=(const Size_t& rhs)
   {
     width  -= rhs.width;
     height -= rhs.height;
@@ -73,51 +72,62 @@ public:
   }
 
 public:
-  int width;
-  int height;
+  T width;
+  T height;
 };
 
-inline Size operator*(const Size& lhs, int factor)
+template<typename T>
+inline Size_t<T> operator*(const Size_t<T>& lhs, T factor)
 {
-  return Size(lhs.width  * factor,
+  return Size_t(lhs.width  * factor,
               lhs.height * factor);
 }
 
-inline Size operator*(int factor, const Size& rhs)
+template<typename T>
+inline Size_t<T> operator*(T factor, const Size_t<T>& rhs)
 {
-  return Size(rhs.width  * factor,
+  return Size_t(rhs.width  * factor,
               rhs.height * factor);
 }
 
-inline Size operator/(const Size& lhs, int divisor)
+template<typename T>
+inline Size_t<T> operator/(const Size_t<T>& lhs, T divisor)
 {
-  return Size(lhs.width  / divisor,
+  return Size_t(lhs.width  / divisor,
               lhs.height / divisor);
 }
 
-inline Size operator+(const Size& lhs, const Size& rhs)
+template<typename T>
+inline Size_t<T> operator+(const Size_t<T>& lhs, const Size_t<T>& rhs)
 {
-  return Size(lhs.width  + rhs.width,
+  return Size_t(lhs.width  + rhs.width,
               lhs.height + rhs.height);
 }
 
-inline Size operator-(const Size& lhs, const Size& rhs)
+template<typename T>
+inline Size_t<T> operator-(const Size_t<T>& lhs, const Size_t<T>& rhs)
 {
-  return Size(lhs.width  - rhs.width,
+  return Size_t(lhs.width  - rhs.width,
               lhs.height - rhs.height);
 }
 
-inline bool operator==(const Size& lhs, const Size& rhs)
+template<typename T>
+inline bool operator==(const Size_t<T>& lhs, const Size_t<T>& rhs)
 {
   return (lhs.width == rhs.width) && (lhs.height == rhs.height);
 }
 
-inline bool operator!=(const Size& lhs, const Size& rhs)
+template<typename T>
+inline bool operator!=(const Size_t<T>& lhs, const Size_t<T>& rhs)
 {
   return (lhs.width != rhs.width) || (lhs.height != rhs.height);
 }
 
-std::ostream& operator<<(std::ostream& s, const Size& size);
+template<typename T>
+std::ostream& operator<<(std::ostream& s, const Size_t<T>& size);
+
+using Size = Size_t<int>;
+using Sizef = Size_t<float>;
 
 #endif
 
