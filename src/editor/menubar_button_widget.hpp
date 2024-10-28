@@ -47,7 +47,11 @@ public:
 
 private:
   std::string m_text;
-  float x_pos;
+  Rectf m_rect;
+  Rectf m_bg_rect; // Doesn't hurt to precalculate this
+  
+  // Events
+  bool m_is_hovered;
   
   //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
   EditorMenubarButtonWidget& operator=(const EditorMenubarButtonWidget&) = delete;

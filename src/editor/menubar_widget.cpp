@@ -26,7 +26,7 @@
 EditorMenubarWidget::EditorMenubarWidget() :
 	m_buttons{},
 	// -20.0f is a hack for rounding
-	m_rect(-g_config->menuroundness, -g_config->menuroundness, 500.0f, 40.0f)
+	m_rect(-g_config->menuroundness, -g_config->menuroundness, 0.0f, 40.0f)
 {
 }
 
@@ -50,9 +50,8 @@ EditorMenubarWidget::update(float dt_sec)
 void
 EditorMenubarWidget::setup()
 {
-	float x_pos = 0;
+	float x_pos = 20;
 	auto menubar_add = [&](const std::string& text) {
-		//EditorMenubarButtonWidget btn{*this, text, x_pos};
 		m_buttons.emplace_back(text, x_pos);
 	};
 	
@@ -61,6 +60,8 @@ EditorMenubarWidget::setup()
 	menubar_add("AI");
 	menubar_add("Info");
 	menubar_add("Help");
+	
+	m_rect.set_width(x_pos + 3.0f);
 }
 
 void
@@ -71,28 +72,22 @@ EditorMenubarWidget::on_window_resize()
 bool
 EditorMenubarWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
 {
-  if (button.button != SDL_BUTTON_LEFT) return false;
-
-  Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
-  
+  for (auto& btn : m_buttons) btn.on_mouse_button_up(button);
   return false;
 }
 
 bool
 EditorMenubarWidget::on_mouse_button_down(const SDL_MouseButtonEvent& button)
 {
-  if (button.button != SDL_BUTTON_LEFT) return false;
-
-  Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
-
+  for (auto& btn : m_buttons) btn.on_mouse_button_down(button);
   return false;
 }
 
 bool
 EditorMenubarWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 {
-  Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(motion.x, motion.y);
-
+  for (auto& btn : m_buttons) btn.on_mouse_motion(motion);
+  
   return false;
 }
 
