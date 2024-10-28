@@ -20,6 +20,7 @@
 #include "supertux/gameconfig.hpp"
 #include "supertux/globals.hpp"
 #include "util/log.hpp"
+#include "math/util.hpp"
 #include "video/viewport.hpp"
 #include "video/video_system.hpp"
 #include "supertux/resources.hpp"
@@ -53,7 +54,7 @@ EditorMenubarButtonWidget::draw(DrawingContext& context)
 		Resources::normal_font, m_text, m_rect.p1(), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
 	
 	if (m_is_hovered)
-		context.color().draw_filled_rect(m_bg_rect, g_config->editorhovercolor, g_config->menuroundness,
+		context.color().draw_filled_rect(m_bg_rect, g_config->editorhovercolor, (g_config->menuroundness / 3.0f + 4.0f),
                                    LAYER_GUI-5);
 }
 

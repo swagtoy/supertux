@@ -22,6 +22,7 @@
 #include "video/video_system.hpp"
 #include "supertux/resources.hpp"
 #include "util/log.hpp"
+#include "math/util.hpp"
 
 EditorMenubarWidget::EditorMenubarWidget() :
 	m_buttons{},
@@ -33,7 +34,7 @@ EditorMenubarWidget::EditorMenubarWidget() :
 void
 EditorMenubarWidget::draw(DrawingContext& context)
 {
-	context.color().draw_filled_rect(m_rect, g_config->editorcolor, g_config->menuroundness,
+	context.color().draw_filled_rect(m_rect, g_config->editorcolor, math::clamp(g_config->menuroundness, 0.0f, 16.0f),
                                    LAYER_GUI-5);
 
 	for (auto& button: m_buttons)
@@ -58,6 +59,7 @@ EditorMenubarWidget::setup()
 	menubar_add("File");
 	menubar_add("Edit");
 	menubar_add("AI");
+	menubar_add("Layers");
 	menubar_add("Info");
 	menubar_add("Help");
 	
