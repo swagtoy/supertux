@@ -43,7 +43,7 @@ public:
   virtual bool on_key_down(const SDL_KeyboardEvent& key) { return false; }
 
 private:
-  Widget(const Widget&) = delete;
+  //Widget(const Widget&) = delete;
   Widget& operator=(const Widget&) = delete;
 };
 

@@ -33,7 +33,7 @@ class EditorMenubarButtonWidget : public Widget
 {
 public:
   EditorMenubarButtonWidget(const std::string& text, float& x_pos_inc);
-  EditorMenubarButtonWidget(EditorMenubarButtonWidget&&) {};
+  EditorMenubarButtonWidget(EditorMenubarButtonWidget&&) = default;
   
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;

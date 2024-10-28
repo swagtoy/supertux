@@ -28,13 +28,11 @@ EditorMenubarButtonWidget::EditorMenubarButtonWidget(const std::string& text, fl
 	x_pos{x_pos_inc}
 {
 	x_pos_inc += Resources::normal_font->get_text_width(text);
-	
 }
 
 void
 EditorMenubarButtonWidget::draw(DrawingContext& context)
 {
-	//log_warning << "x_pos: " << x_pos << std::endl;
 	context.color().draw_text(
 		Resources::normal_font, m_text, {x_pos, 8.0f}, ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
 }
