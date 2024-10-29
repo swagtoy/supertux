@@ -35,11 +35,11 @@
 #include "supertux/sequence.hpp"
 #include "supertux/timer.hpp"
 #include "video/surface_ptr.hpp"
+#include "supertux/level.hpp"
 
 class CodeController;
 class DrawingContext;
 class EndSequence;
-class Level;
 class Player;
 class Sector;
 class Statistics;
@@ -75,8 +75,11 @@ private:
     Vector position;
     bool is_checkpoint;
   };
-
+  
+private:
+  GameSession(Savegame* savegame, Statistics* statistics = nullptr, bool preserve_music = false);
 public:
+  GameSession(Level* level, Savegame* savegame = nullptr, Statistics* statistics = nullptr, bool preserve_music = false);
   GameSession(const std::string& levelfile, Savegame& savegame, Statistics* statistics = nullptr,
               bool preserve_music = false);
 
@@ -129,7 +132,7 @@ public:
   void abort_level();
   bool is_active() const;
 
-  Savegame& get_savegame() const { return m_savegame; }
+  Savegame& get_savegame() const { return *m_savegame; }
 
   void set_scheduler(SquirrelScheduler& new_scheduler);
 
@@ -150,7 +153,9 @@ public:
   bool m_prevent_death; /**< true if players should enter ghost mode instead of dying */
 
 private:
-  std::unique_ptr<Level> m_level;
+  Level* m_level;
+  // Stores the unique pointer, don't use this directly.
+  std::unique_ptr<Level> m_level_storage;
   SurfacePtr m_statistics_backdrop;
 
   ssq::Table m_data_table;
@@ -176,7 +181,7 @@ private:
   bool m_spawn_with_invincibility;
 
   Statistics* m_best_level_statistics;
-  Savegame& m_savegame;
+  Savegame* m_savegame;
 
   // Note: m_play_time should reset when a level is restarted from the beginning
   //       but NOT if Tux respawns at a checkpoint (for LevelTimes to work)

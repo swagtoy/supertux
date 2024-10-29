@@ -27,6 +27,7 @@
 
 class Savegame;
 class World;
+class Level;
 
 class GameManager final : public Currenton<GameManager>
 {
@@ -39,6 +40,7 @@ public:
                       const std::optional<std::pair<std::string, Vector>>& start_pos);
   void start_level(const World& world, const std::string& level_filename,
                    const std::optional<std::pair<std::string, Vector>>& start_pos = std::nullopt);
+  void start_level(Level* level, const std::optional<std::pair<std::string, Vector>>& start_pos = std::nullopt);
 
   bool load_next_worldmap();
   void set_next_worldmap(const std::string& world, const std::string& sector = "",

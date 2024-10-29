@@ -364,6 +364,13 @@ Editor::test_level(const std::optional<std::pair<std::string, Vector>>& test_pos
 
   Tile::draw_editor_images = false;
   Compositor::s_render_lighting = true;
+  
+  if (m_level && m_levelfile.empty() || m_levelfile == "")
+  {
+  	GameManager::current()->start_level(m_level.get(), test_pos);
+	return;
+  }
+  
   std::string backup_filename = get_autosave_from_levelname(m_levelfile);
   std::string directory = get_level_directory();
 
