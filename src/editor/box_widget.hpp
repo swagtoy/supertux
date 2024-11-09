@@ -14,27 +14,28 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_EDITOR_BUTTON_WIDGET_HPP
-#define HEADER_SUPERTUX_EDITOR_BUTTON_WIDGET_HPP
+// This is a generic box widget that can handle events and such for
+//  you. Please use this instead of testing for events yourself. It can
+//  also draw a box of your choice, but it's not the only usage.
+
+#ifndef HEADER_SUPERTUX_EDITOR_BOX_WIDGET_HPP
+#define HEADER_SUPERTUX_EDITOR_BOX_WIDGET_HPP
 
 #include "editor/widget.hpp"
 
 #include <functional>
+#include <string>
 
 #include "math/rectf.hpp"
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 
-class ButtonWidget : public Widget
+class BoxWidget : public Widget
 {
-private:
 public:
-  ButtonWidget(SpritePtr sprite, const Vector& pos, std::function<void()> m_sig_click = {});
-  ButtonWidget(const std::string& path, const Vector& pos, std::function<void()> callback = {}) :
-    ButtonWidget(SpriteManager::current()->create(path), pos, std::move(callback))
-  {
-  }
-
+  BoxWidget(const Rectf& box_props);
+  BoxWidget(BoxWidget&&) = default;
+  
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;
 
@@ -45,16 +46,13 @@ public:
   virtual bool on_mouse_button_down(const SDL_MouseButtonEvent& button) override;
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
 
+protected:
+  Rectf m_box;
+  
 private:
-  SpritePtr m_sprite;
-  Rectf m_rect;
-  bool m_grab;
-  bool m_hover;
-  std::function<void()> m_sig_click;
-
-private:
-  ButtonWidget(const ButtonWidget&) = delete;
-  ButtonWidget& operator=(const ButtonWidget&) = delete;
+  bool m_is_hovered;
+  //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
+  BoxWidget& operator=(const BoxWidget&) = delete;
 };
 
 #endif
