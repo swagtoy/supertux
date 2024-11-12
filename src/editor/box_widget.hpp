@@ -30,10 +30,15 @@
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 
+// All class, no style. This may need to be improved in the
+// future. Caching may be redundant especially when considering that
+// it's not being done 1000 times a second. Please decide when moving
+// widgets into the entire codebase if this is okay.
 class BoxWidget : public Widget
 {
 public:
-  BoxWidget(const Rectf& box_props);
+  BoxWidget(const Rectf& box_props, float padding = 0.0f);
+  BoxWidget(const Rectf& box_props, float padding_w, float padding_h);
   BoxWidget(BoxWidget&&) = default;
   
   virtual void draw(DrawingContext& context) override;
@@ -45,12 +50,30 @@ public:
   virtual bool on_mouse_button_up(const SDL_MouseButtonEvent& button) override;
   virtual bool on_mouse_button_down(const SDL_MouseButtonEvent& button) override;
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
-
+  
+  void set_size(float w, float h)
+  {
+    m_box.set_size(w, h);
+    set_cached_padding();
+  }
+  
+  // This naming scheme sucks and so does this design really but I couldn't think of anything better :(
+  // Maybe we could just not cache anything?
+  /** @return Return "cached" box, meaning the paddings are calculated. Use m_box  */
+  inline const Rectf& box() { return m_box_cached; }
+  inline bool hovered() { return m_is_hovered; }
+  
 protected:
   Rectf m_box;
   
 private:
+  float m_padding_w, m_padding_h;
+  // Cached with padding, uses very little memory to cache a very little cpu usage calculation
+  Rectf m_box_cached;
   bool m_is_hovered;
+  
+  void set_cached_padding();
+  
   //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
   BoxWidget& operator=(const BoxWidget&) = delete;
 };

@@ -18,6 +18,7 @@
 #define HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
 
 #include "editor/widget.hpp"
+#include "editor/box_widget.hpp"
 
 #include <functional>
 #include <string>
@@ -29,7 +30,7 @@
 class Editor;
 class EditorMenubarWidget;
 
-class EditorMenubarButtonWidget : public Widget
+class EditorMenubarButtonWidget : public BoxWidget
 {
 public:
   EditorMenubarButtonWidget(const std::string& text, float& x_pos_inc);
@@ -47,11 +48,6 @@ public:
 
 private:
   std::string m_text;
-  Rectf m_rect;
-  Rectf m_bg_rect; // Doesn't hurt to precalculate this
-  
-  // Events
-  bool m_is_hovered;
   
   //EditorMenubarButtonWidget(const EditorMenubarButtonWidget&) = delete;
   EditorMenubarButtonWidget& operator=(const EditorMenubarButtonWidget&) = delete;

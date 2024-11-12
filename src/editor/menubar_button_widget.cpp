@@ -26,36 +26,29 @@
 #include "supertux/resources.hpp"
 
 namespace {
-	constexpr int PADDING_X = 20;
+	constexpr int PADDING_X = 8;
 	constexpr int H_OFF_W = 8;
 	constexpr int H_OFF_H = 4;
 }
-
+ 
 EditorMenubarButtonWidget::EditorMenubarButtonWidget(const std::string& text, float& x_pos_inc) :
-	m_text{text},
-	m_rect{Vector{x_pos_inc, 8.0f}, Vector{0, 0}},
-	m_bg_rect{},
-	m_is_hovered{false}
+  BoxWidget{Rectf{Vector{x_pos_inc, 8.0f}, Vector{0, 0}}, H_OFF_W, H_OFF_H},
+	m_text{text}
 {
-	m_rect.set_size(Resources::normal_font->get_text_width(text),
-	                Resources::normal_font->get_text_height(text));
-	x_pos_inc += PADDING_X + m_rect.get_width();
-	
-	// Background is precalculated for mouse hover effect
-	m_bg_rect = std::move(Rectf(Vector{m_rect.get_left() - H_OFF_W, m_rect.get_top() - H_OFF_H},
-		                  Sizef{m_rect.get_width() + H_OFF_W*2, m_rect.get_height() + H_OFF_H*2}));
-	
+	set_size(Resources::normal_font->get_text_width(text),
+	         Resources::normal_font->get_text_height(text));
+	x_pos_inc += PADDING_X + box().get_width();
 }
 
 void
 EditorMenubarButtonWidget::draw(DrawingContext& context)
 {
 	context.color().draw_text(
-		Resources::normal_font, m_text, m_rect.p1(), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
+		Resources::normal_font, m_text, m_box.p1(), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
 	
-	if (m_is_hovered)
-		context.color().draw_filled_rect(m_bg_rect, g_config->editorhovercolor, (g_config->menuroundness / 3.0f + 4.0f),
-                                   LAYER_GUI-5);
+	if (hovered())
+		context.color().draw_filled_rect(box(), g_config->editorhovercolor, (g_config->menuroundness / 3.0f + 4.0f),
+                                     LAYER_GUI-5);
 }
 
 void
@@ -96,10 +89,7 @@ EditorMenubarButtonWidget::on_mouse_button_down(const SDL_MouseButtonEvent& butt
 bool
 EditorMenubarButtonWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 {
-  Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(motion.x, motion.y);
-
-  m_is_hovered = m_bg_rect.contains(mouse_pos);
-
+  BoxWidget::on_mouse_motion(motion);
   return false;
 }
 

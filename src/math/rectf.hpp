@@ -147,15 +147,21 @@ public:
 
     return glm::distance(v1, v2);
   }
+  
+  Rectf grown(float border_w, float border_h) const
+  {
+    // If the size would be shrunk below 0, do not resize.
+    if (m_size.width + border_w * 2 < 0.f || m_size.height + border_h * 2 < 0.f)
+      return *this;
+
+    return Rectf(m_p1.x - border_w, m_p1.y - border_h,
+                 get_right() + border_w, get_bottom() + border_h);
+    
+  }
 
   Rectf grown(float border) const
   {
-    // If the size would be shrunk below 0, do not resize.
-    if (m_size.width + border * 2 < 0.f || m_size.height + border * 2 < 0.f)
-      return *this;
-
-    return Rectf(m_p1.x - border, m_p1.y - border,
-                 get_right() + border, get_bottom() + border);
+    return grown(border, border);
   }
 
   // leave these two public to save the headaches of set/get functions for such
