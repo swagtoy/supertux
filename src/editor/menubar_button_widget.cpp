@@ -35,8 +35,8 @@ EditorMenubarButtonWidget::EditorMenubarButtonWidget(const std::string& text, fl
   BoxWidget{Rectf{Vector{x_pos_inc, 8.0f}, Vector{0, 0}}, H_OFF_W, H_OFF_H},
 	m_text{text}
 {
-	set_size(Resources::normal_font->get_text_width(text),
-	         Resources::normal_font->get_text_height(text));
+	m_box.set_size(Resources::normal_font->get_text_width(text),
+	               Resources::normal_font->get_text_height(text));
 	x_pos_inc += PADDING_X + box().get_width();
 }
 

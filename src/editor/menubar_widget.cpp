@@ -25,16 +25,16 @@
 #include "math/util.hpp"
 
 EditorMenubarWidget::EditorMenubarWidget() :
-	m_buttons{},
+  BoxWidget({-g_config->menuroundness, -g_config->menuroundness, 0.0f, 40.0f}),
+	m_buttons{}
 	// -20.0f is a hack for rounding
-	m_rect(-g_config->menuroundness, -g_config->menuroundness, 0.0f, 40.0f)
 {
 }
 
 void
 EditorMenubarWidget::draw(DrawingContext& context)
 {
-	context.color().draw_filled_rect(m_rect, g_config->editorcolor, math::clamp(g_config->menuroundness, 0.0f, 16.0f),
+	context.color().draw_filled_rect(box(), g_config->editorcolor, math::clamp(g_config->menuroundness, 0.0f, 16.0f),
                                    LAYER_GUI-5);
 
 	for (auto& button: m_buttons)

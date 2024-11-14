@@ -18,6 +18,7 @@
 #define HEADER_SUPERTUX_EDITOR_MENUBAR_WIDGET_HPP
 
 #include "editor/widget.hpp"
+#include "editor/box_widget.hpp"
 #include "editor/menubar_button_widget.hpp"
 
 #include <functional>
@@ -29,7 +30,7 @@
 
 class Editor;
 
-class EditorMenubarWidget : public Widget
+class EditorMenubarWidget : public BoxWidget
 {
 public:
   EditorMenubarWidget();

@@ -29,10 +29,8 @@ BoxWidget::BoxWidget(const Rectf& props, float padding_w, float padding_h) :
   m_box{props},
   m_padding_w{padding_w},
   m_padding_h{padding_h},
-  m_box_cached{props},
   m_is_hovered{false}
 {
-  set_cached_padding();
 }
 
 BoxWidget::BoxWidget(const Rectf& props, float padding) :
@@ -59,13 +57,11 @@ BoxWidget::on_window_resize()
 {
 }
 
-void
-BoxWidget::set_cached_padding()
+const Rectf BoxWidget::box()
 {
-  m_box_cached = m_box;
-  // Maybe i wasnt actually meant to do this.
-  m_box_cached = m_box_cached.grown(m_padding_w, m_padding_h);
+  return m_box.grown(m_padding_w, m_padding_h);
 }
+
 
 bool
 BoxWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
@@ -92,8 +88,7 @@ BoxWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 {
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(motion.x, motion.y);
 
-  m_is_hovered = m_box_cached.contains(mouse_pos);
-  
+  m_is_hovered = box().contains(mouse_pos);
 
   return false;
 }
