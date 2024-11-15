@@ -47,7 +47,6 @@ public:
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
 
 private:
-  Rectf m_rect;
   // i.e.  File    Edit    View     AI     Junk    Garbage
   std::vector<EditorMenubarButtonWidget> m_buttons;
   
