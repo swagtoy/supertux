@@ -144,13 +144,16 @@ GameSession::reset_level()
 void
 GameSession::on_player_added(int id)
 {
-  if (m_savegame.get_player_status().m_num_players <= id)
-    m_savegame.get_player_status().add_player();
+  if (m_savegame)
+  {
+    if (m_savegame->get_player_status().m_num_players <= id)
+      m_savegame->get_player_status().add_player();
 
-  // ID = 0 is impossible, so no need to write `(id == 0) ? "" : ...`
-  auto& player = m_currentsector->add<Player>(m_savegame.get_player_status(), "Tux" + std::to_string(id + 1), id);
+    // ID = 0 is impossible, so no need to write `(id == 0) ? "" : ...`
+    auto& player = m_currentsector->add<Player>(m_savegame->get_player_status(), "Tux" + std::to_string(id + 1), id);
+    player.multiplayer_prepare_spawn();
+  }
 
-  player.multiplayer_prepare_spawn();
 }
 
 bool
@@ -654,7 +657,8 @@ GameSession::update(float dt_sec, const Controller& controller)
 
       for (Player* player : m_currentsector->get_players())
       {
-        if (player->get_controller().pressed(Control::ITEM) && m_savegame.get_player_status().m_item_pockets.size() > 0)
+        if ((m_savegame && m_savegame->get_player_status().m_item_pockets.size() > 0) &&
+            player->get_controller().pressed(Control::ITEM))
         {
           player->get_status().give_item_from_pocket(player);
         }
