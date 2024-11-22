@@ -44,7 +44,14 @@
 
 namespace {
 
-  const int snap_grid_sizes[4] = {4, 8, 16, 32};
+const int snap_grid_sizes[4] = {4, 8, 16, 32};
+
+bool is_position_inside_tilemap(const TileMap* tilemap, const Vector& pos)
+{
+  return pos.x >= 0 && pos.y >= 0 &&
+         pos.x < static_cast<float>(tilemap->get_width()) &&
+         pos.y < static_cast<float>(tilemap->get_height());
+}
 
 } // namespace
 
@@ -169,59 +176,23 @@ EditorOverlayWidget::input_tile(const Vector& pos, uint32_t tile)
 }
 
 void
-EditorOverlayWidget::autotile(const Vector& pos, uint32_t tile)
-{
-  auto tilemap = m_editor.get_selected_tilemap();
-  if (!tilemap || !is_position_inside_tilemap(tilemap, pos)) return;
-
-  tilemap->save_state();
-  tilemap->autotile(static_cast<int>(pos.x), static_cast<int>(pos.y), tile, get_current_autotileset());
-}
-
-void
 EditorOverlayWidget::input_autotile(const Vector& pos, uint32_t tile)
 {
-  this->input_tile(pos, tile);
+  auto tilemap = m_editor.get_selected_tilemap();
+  if (!tilemap || !is_position_inside_tilemap(tilemap, pos)) return;
 
-  float x = pos.x;
-  float y = pos.y;
-
-  for(float posY = y - 1.0f; posY <= y + 1.0f; posY++)
-    for(float posX = x - 1.0f; posX <= x + 1.0f; posX++)
-    {
-      this->autotile(Vector(posX, posY), tile);
-    }
+  tilemap->save_state();
+  tilemap->autotile(pos, tile, get_current_autotileset());
 }
 
 void
-EditorOverlayWidget::autotile_corner(const Vector& pos, uint32_t tile,
-                                     TileMap::AutotileCornerOperation op)
+EditorOverlayWidget::input_autotile_erase(const Vector& pos)
 {
   auto tilemap = m_editor.get_selected_tilemap();
   if (!tilemap || !is_position_inside_tilemap(tilemap, pos)) return;
 
   tilemap->save_state();
-  tilemap->autotile_corner(static_cast<int>(pos.x), static_cast<int>(pos.y), tile, get_current_autotileset(), op);
-}
-
-void
-EditorOverlayWidget::input_autotile_corner(const Vector& corner, uint32_t tile, const Vector& override_pos)
-{
-  // Erase the tile - the autotiling will add the necessary tile after
-  //if (override_pos != Vector(-1.f, -1.f))
-  //  this->input_tile(override_pos, 0);
-
-  float x = corner.x;
-  float y = corner.y;
-
-  this->autotile_corner(Vector(x - 1.0f, y - 1.0f), tile,
-                        TileMap::AutotileCornerOperation::ADD_BOTTOM_RIGHT);
-  this->autotile_corner(Vector(x       , y - 1.0f), tile,
-                        TileMap::AutotileCornerOperation::ADD_BOTTOM_LEFT);
-  this->autotile_corner(Vector(x - 1.0f, y       ), tile,
-                        TileMap::AutotileCornerOperation::ADD_TOP_RIGHT);
-  this->autotile_corner(Vector(x       , y       ), tile,
-                        TileMap::AutotileCornerOperation::ADD_TOP_LEFT);
+  tilemap->autotile_erase(pos, get_current_autotileset());
 }
 
 void
@@ -229,7 +200,6 @@ EditorOverlayWidget::put_tiles(const Vector& target_tile, TileSelection* tiles)
 {
   m_editor.get_selected_tilemap()->save_state();
 
-  const Vector hovered_corner = target_tile + Vector(0.5f, 0.5f);
   Vector add_tile(0.0f, 0.0f);
   for (add_tile.x = static_cast<float>(tiles->m_width) - 1.0f; add_tile.x >= 0.0f; add_tile.x--)
   {
@@ -243,26 +213,14 @@ EditorOverlayWidget::put_tiles(const Vector& target_tile, TileSelection* tiles)
         if (autotileset)
         {
           if (tile == 0)
-          {
-            m_editor.get_selected_tilemap()->autotile_erase(target_tile + add_tile, hovered_corner + add_tile, autotileset);
-          }
-          else if (autotileset->is_corner())
-          {
-            input_autotile_corner(hovered_corner + add_tile,
-                                  tile,
-                                  target_tile + add_tile);
-          }
+            input_autotile_erase(target_tile + add_tile);
           else
-          {
             input_autotile(target_tile + add_tile, tile);
-          }
+          continue;
         }
       }
-      else
-      {
-        input_tile(target_tile + add_tile, tile);
-      }
 
+      input_tile(target_tile + add_tile, tile);
     } // for tile y
   } // for tile x
 }
@@ -1224,13 +1182,17 @@ EditorOverlayWidget::on_key_down(const SDL_KeyboardEvent& key)
   {
     alt_pressed = true;
   }
-  else if (sym == SDLK_0)
+  else if (sym == SDLK_0 || sym == SDLK_KP_0)
   {
     m_current_autotileset = 0;
   }
-  else if (sym > SDLK_0 && sym <= SDLK_9)
+  else if (sym >= SDLK_1 && sym <= SDLK_9)
   {
-    m_current_autotileset = static_cast<int>(sym - SDLK_0);
+    m_current_autotileset = static_cast<int>(sym - SDLK_1 + 1);
+  }
+  else if (sym >= SDLK_KP_1 && sym <= SDLK_KP_9)
+  {
+    m_current_autotileset = static_cast<int>(sym - SDLK_KP_1 + 1);
   }
   return true;
 }
@@ -1688,14 +1650,6 @@ EditorOverlayWidget::align_to_tilemap(const Vector& sp, int tile_size) const
 
   Vector sp_ = sp + tilemap->get_offset() / static_cast<float>(tile_size);
   return glm::trunc(sp_) * static_cast<float>(tile_size);
-}
-
-bool
-EditorOverlayWidget::is_position_inside_tilemap(const TileMap* tilemap, const Vector& pos) const
-{
-  return pos.x >= 0 && pos.y >= 0 &&
-         pos.x < static_cast<float>(tilemap->get_width()) &&
-         pos.y < static_cast<float>(tilemap->get_height());
 }
 
 void
