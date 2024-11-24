@@ -25,9 +25,9 @@
 #include "math/util.hpp"
 
 EditorMenubarWidget::EditorMenubarWidget() :
+  // We use -menuroundness to essentially hide the top-left, bottom-left, and top-right rounded corners. Hack.
   BoxWidget({-g_config->menuroundness, -g_config->menuroundness, 0.0f, 40.0f}),
 	m_buttons{}
-	// -20.0f is a hack for rounding
 {
 }
 
@@ -52,7 +52,7 @@ void
 EditorMenubarWidget::setup()
 {
 	float x_pos = 20;
-	auto menubar_add = [&](const std::string& text) {
+	const auto menubar_add = [&](const std::string& text) {
 		m_buttons.emplace_back(text, x_pos);
 	};
 	
@@ -81,16 +81,23 @@ EditorMenubarWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
 bool
 EditorMenubarWidget::on_mouse_button_down(const SDL_MouseButtonEvent& button)
 {
-  for (auto& btn : m_buttons) btn.on_mouse_button_down(button);
+  for (auto& btn : m_buttons)
+  {
+    bool x = btn.on_mouse_button_down(button);
+    if (x) return x;
+  }
   return false;
 }
 
 bool
 EditorMenubarWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 {
-  for (auto& btn : m_buttons) btn.on_mouse_motion(motion);
+  for (auto& btn : m_buttons)
+  {
+    btn.on_mouse_motion(motion);
+  }
   
-  return false;
+  return BoxWidget::on_mouse_motion(motion);
 }
 
 /* EOF */

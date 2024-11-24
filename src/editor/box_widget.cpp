@@ -90,7 +90,7 @@ BoxWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 
   m_is_hovered = box().contains(mouse_pos);
 
-  return false;
+  return m_is_hovered;
 }
 
 /* EOF */

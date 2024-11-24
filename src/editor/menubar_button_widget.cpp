@@ -83,14 +83,13 @@ EditorMenubarButtonWidget::on_mouse_button_down(const SDL_MouseButtonEvent& butt
 
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
 
-  return false;
+  return true;
 }
 
 bool
 EditorMenubarButtonWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
 {
-  BoxWidget::on_mouse_motion(motion);
-  return false;
+  return BoxWidget::on_mouse_motion(motion);
 }
 
 /* EOF */

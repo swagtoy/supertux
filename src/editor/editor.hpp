@@ -222,6 +222,7 @@ private:
   TileSet* m_tileset;
   bool m_has_deprecated_tiles;
 
+  // TODO BoxWidget
   std::vector<std::unique_ptr<Widget> > m_widgets;
   ButtonWidget* m_undo_widget;
   ButtonWidget* m_redo_widget;

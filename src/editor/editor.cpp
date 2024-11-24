@@ -146,8 +146,8 @@ Editor::Editor() :
 
   m_widgets.push_back(std::move(toolbox_widget));
   m_widgets.push_back(std::move(layers_widget));
-  m_widgets.push_back(std::move(overlay_widget));
   m_widgets.push_back(std::move(menubar_widget));
+  m_widgets.push_back(std::move(overlay_widget));
 }
 
 Editor::~Editor()
