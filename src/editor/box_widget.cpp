@@ -66,8 +66,6 @@ const Rectf BoxWidget::box()
 bool
 BoxWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
 {
-  if (button.button != SDL_BUTTON_LEFT) return false;
-
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
   
   return false;
@@ -76,8 +74,6 @@ BoxWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
 bool
 BoxWidget::on_mouse_button_down(const SDL_MouseButtonEvent& button)
 {
-  if (button.button != SDL_BUTTON_LEFT) return false;
-
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
 
   return false;
@@ -89,7 +85,6 @@ BoxWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(motion.x, motion.y);
 
   m_is_hovered = box().contains(mouse_pos);
-
   return m_is_hovered;
 }
 

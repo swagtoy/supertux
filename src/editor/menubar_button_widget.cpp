@@ -26,9 +26,9 @@
 #include "supertux/resources.hpp"
 
 namespace {
-	constexpr int PADDING_X = 8;
-	constexpr int H_OFF_W = 8;
-	constexpr int H_OFF_H = 4;
+constexpr int PADDING_X = 8;
+constexpr int H_OFF_W = 8;
+constexpr int H_OFF_H = 4;
 }
  
 EditorMenubarButtonWidget::EditorMenubarButtonWidget(const std::string& text, float& x_pos_inc) :
@@ -83,7 +83,7 @@ EditorMenubarButtonWidget::on_mouse_button_down(const SDL_MouseButtonEvent& butt
 
   Vector mouse_pos = VideoSystem::current()->get_viewport().to_logical(button.x, button.y);
 
-  return true;
+  return hovered();
 }
 
 bool
