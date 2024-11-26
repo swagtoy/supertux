@@ -163,6 +163,8 @@ Editor::draw(Compositor& compositor)
     for(const auto& widget : m_widgets) {
       widget->draw(context);
     }
+    
+    m_overlay_widget->draw_tilemap_outer_shading(context);
 
     // If camera scale must be changed, change it here.
     if (m_new_scale != 0.f)
@@ -443,9 +445,10 @@ void
 Editor::keep_camera_in_bounds()
 {
   Camera& camera = m_sector->get_camera();
-  camera.keep_in_bounds(Rectf(0.f, 0.f,
-                              std::max(0.0f, m_sector->get_editor_width() + 128.f / camera.get_current_scale()),
-                              std::max(0.0f, m_sector->get_editor_height() + 32.f / camera.get_current_scale())));
+  constexpr float offset = 80.f;
+  camera.keep_in_bounds(Rectf(-offset, -offset,
+                              std::max(0.0f, m_sector->get_editor_width() + 128.f / camera.get_current_scale()) + offset,
+                              std::max(0.0f, m_sector->get_editor_height() + 32.f / camera.get_current_scale()) + offset));
 
   m_overlay_widget->update_pos();
 }

@@ -72,7 +72,8 @@ public:
 
   void edit_path(PathGameObject* path, GameObject* new_marked_object = nullptr);
   void reset_action_press();
-
+  void draw_tilemap_outer_shading(DrawingContext&);
+  
 private:
   static bool action_pressed;
   static bool alt_pressed;
