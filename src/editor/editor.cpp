@@ -215,7 +215,7 @@ void
 Editor::update(float dt_sec, const Controller& controller)
 {
   // Auto-save (interval).
-  if (m_level) {
+  if (m_level && !m_temp_level) {
     m_time_since_last_save += dt_sec;
     if (m_time_since_last_save >= static_cast<float>(std::max(
         g_config->editor_autosave_frequency, 1)) * 60.f) {
@@ -312,6 +312,9 @@ Editor::update(float dt_sec, const Controller& controller)
 void
 Editor::remove_autosave_file()
 {
+  if (m_temp_level)
+    return;
+  
   // Clear the auto-save file.
   if (!m_autosave_levelfile.empty())
   {
@@ -329,8 +332,11 @@ Editor::remove_autosave_file()
 void
 Editor::save_level(const std::string& filename, bool switch_file)
 {
-  auto file = !filename.empty() ? filename : m_levelfile;
+  if (m_temp_level)
+    return;
 
+  auto file = !filename.empty() ? filename : m_levelfile;
+  
   if (switch_file)
     m_levelfile = filename;
 
@@ -406,6 +412,8 @@ Editor::test_level(const std::optional<std::pair<std::string, Vector>>& test_pos
 void
 Editor::open_level_directory()
 {
+  if (m_temp_level)
+    return;
   m_level->save(FileSystem::join(get_level_directory(), m_levelfile));
   auto path = FileSystem::join(PHYSFS_getWriteDir(), get_level_directory());
   FileSystem::open_path(path);
@@ -557,13 +565,12 @@ Editor::level_from_nothing()
 {
   Statistics::Preferences stat_prefs{};
   m_level = std::make_unique<Level>(false);
-  m_level->m_name = "a";
+  m_level->m_name = "Temporary level";
   m_level->m_tileset = "images/tiles.strf";  
   auto sector = SectorParser::from_nothing(*m_level);
   sector->set_name(DEFAULT_SECTOR_NAME);
   m_level->add_sector(std::move(sector));
   m_level->initialize(std::move(stat_prefs));
-  m_reload_request = true;
 }
 
 void
@@ -572,7 +579,7 @@ Editor::set_level(std::unique_ptr<Level> level, bool reset)
   std::string sector_name = DEFAULT_SECTOR_NAME;
   Vector translation(0.0f, 0.0f);
 
-  m_temp_level = (level != nullptr);
+  m_temp_level = (level == nullptr);
   
   if (!reset && m_sector) {
     translation = m_sector->get_camera().get_translation();
