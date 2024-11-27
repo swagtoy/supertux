@@ -76,6 +76,8 @@
 #include "video/surface.hpp"
 #include "video/video_system.hpp"
 #include "video/viewport.hpp"
+#include "supertux/sector.hpp"
+#include "supertux/sector_parser.hpp"
 
 static const float CAMERA_MIN_ZOOM = 0.5f;
 static const float CAMERA_MAX_ZOOM = 3.0f;
@@ -118,6 +120,7 @@ Editor::Editor() :
   m_after_setup(false),
   m_tileset(nullptr),
   m_has_deprecated_tiles(false),
+  m_temp_level(true),
   m_widgets(),
   m_undo_widget(),
   m_redo_widget(),
@@ -550,11 +553,27 @@ Editor::delete_current_sector()
 }
 
 void
+Editor::level_from_nothing()
+{
+  Statistics::Preferences stat_prefs{};
+  m_level = std::make_unique<Level>(false);
+  m_level->m_name = "a";
+  m_level->m_tileset = "images/tiles.strf";  
+  auto sector = SectorParser::from_nothing(*m_level);
+  sector->set_name(DEFAULT_SECTOR_NAME);
+  m_level->add_sector(std::move(sector));
+  m_level->initialize(std::move(stat_prefs));
+  m_reload_request = true;
+}
+
+void
 Editor::set_level(std::unique_ptr<Level> level, bool reset)
 {
   std::string sector_name = DEFAULT_SECTOR_NAME;
   Vector translation(0.0f, 0.0f);
 
+  m_temp_level = (level != nullptr);
+  
   if (!reset && m_sector) {
     translation = m_sector->get_camera().get_translation();
     sector_name = m_sector->get_name();
@@ -567,11 +586,14 @@ Editor::set_level(std::unique_ptr<Level> level, bool reset)
     m_toolbox_widget->get_tilebox().set_input_type(EditorTilebox::InputType::NONE);
   }
 
-  // Reload level.
-  m_level = nullptr;
   m_levelloaded = true;
-
-  m_level = std::move(level);
+  if (level != nullptr) {
+    // Reload level.
+    m_level = std::move(level);
+  }
+  else {
+    level_from_nothing();
+  }
 
   if (reset) {
     m_tileset = TileManager::current()->get_tileset(m_level->get_tileset());
@@ -610,6 +632,9 @@ Editor::set_level(std::unique_ptr<Level> level, bool reset)
 void
 Editor::reload_level()
 {
+  if (m_temp_level)
+    return;
+  
   ReaderMapping::s_translations_enabled = false;
   set_level(LevelParser::from_file(m_world ?
                                    FileSystem::join(m_world->get_basedir(), m_levelfile) : m_levelfile,
@@ -656,7 +681,7 @@ Editor::quit_editor()
 void
 Editor::check_unsaved_changes(const std::function<void ()>& action)
 {
-  if (!m_levelloaded)
+  if (!m_levelloaded || m_temp_level)
   {
     action();
     return;
@@ -806,32 +831,8 @@ Editor::setup()
   Sector::s_draw_solids_only = false;
   m_after_setup = true;
   if (!m_levelloaded) {
-
-#if 0
-    if (AddonManager::current()->is_old_addon_enabled()) {
-      auto dialog = std::make_unique<Dialog>();
-      dialog->set_text(_("Some obsolete add-ons are still active\nand might cause collisions with default Super Tux structure.\nYou can still enable these add-ons in the menu.\nDisabling these add-ons will not delete your game progress."));
-      dialog->clear_buttons();
-
-      dialog->add_default_button(_("Disable add-ons"), [] {
-        AddonManager::current()->disable_old_addons();
-        MenuManager::instance().push_menu(MenuStorage::EDITOR_LEVELSET_SELECT_MENU);
-      });
-
-      dialog->add_button(_("Ignore (not advised)"), [] {
-        MenuManager::instance().push_menu(MenuStorage::EDITOR_LEVELSET_SELECT_MENU);
-      });
-
-      dialog->add_button(_("Leave editor"), [this] {
-        quit_request = true;
-      });
-
-      MenuManager::instance().set_dialog(std::move(dialog));
-    } else
-#endif
-    {
-      MenuManager::instance().push_menu(MenuStorage::EDITOR_LEVELSET_SELECT_MENU);
-    }
+    // Empty nothing level
+    set_level(nullptr, true);
   }
   
   for (auto& widget : m_widgets) {

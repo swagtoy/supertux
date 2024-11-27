@@ -86,7 +86,7 @@ EditorLevelsetSelectMenu::initialize()
   
   Editor::current()->m_reload_request = true;
   Editor::current()->set_level(std::move(temp_lvl), true);
-  //return;
+  return;
   
 
   Editor::current()->m_deactivate_request = true;

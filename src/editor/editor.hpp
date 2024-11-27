@@ -106,6 +106,8 @@ public:
   int get_tileselect_move_mode() const;
 
   const std::string& get_levelfile() const { return m_levelfile; }
+  
+  void level_from_nothing();
 
   void set_level(const std::string& levelfile_) {
     m_levelfile = levelfile_;
@@ -221,6 +223,7 @@ private:
 
   TileSet* m_tileset;
   bool m_has_deprecated_tiles;
+  bool m_temp_level;
 
   // TODO BoxWidget
   std::vector<std::unique_ptr<Widget> > m_widgets;
