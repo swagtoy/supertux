@@ -205,17 +205,18 @@ GameSession::restart_level(bool after_death, bool preserve_music)
   m_currentsector = nullptr;
   
   try {
-    const std::string base_dir = FileSystem::dirname(m_levelfile);
-    if (base_dir == "./") {
+    if (FileSystem::dirname(m_levelfile) == "./") {
       m_levelfile = FileSystem::basename(m_levelfile);
     }
     
-	// Level was passed as an argument (likely from the editor)
-	if (m_level == nullptr && !m_levelfile.empty())
-	{
-    	m_level_storage = std::move(LevelParser::from_file(m_levelfile, false, false));
-		m_level = m_level_storage.get();
-	}
+    /* The level was passed as an argument (likely from the editor), so we shouldn't
+        load from the file here */
+    // TODO: Move this logic elsewhere?
+    if (m_level == nullptr && !m_levelfile.empty())
+    {
+      m_level_storage = LevelParser::from_file(m_levelfile, false, false);
+      m_level = m_level_storage.get();
+    }
 
     /* Determine the spawnpoint to spawn/respawn Tux to. */
     const GameSession::SpawnPoint* spawnpoint = nullptr;
