@@ -62,6 +62,12 @@ GameManager::start_level(Level* level,
                          const std::optional<std::pair<std::string, Vector>>& start_pos)
 {
 	auto screen = std::make_unique<GameSession>(level);
+  
+  if (start_pos)
+  {
+    screen->set_start_pos(start_pos->first, start_pos->second);
+  }
+  screen->restart_level();
 	ScreenManager::current()->push_screen(std::move(screen));
 }
 

@@ -99,8 +99,6 @@ GameSession::GameSession(Level* level, Savegame* savegame, Statistics* statistic
   GameSession{savegame, statistics, preserve_music}
 {
   m_level = level;
-  if (restart_level(false, preserve_music) != 0)
-    throw std::runtime_error ("Initializing the level failed.");
 }
 
 GameSession::GameSession(const std::string& levelfile_, Savegame& savegame, Statistics* statistics,
@@ -108,8 +106,6 @@ GameSession::GameSession(const std::string& levelfile_, Savegame& savegame, Stat
   GameSession{&savegame, statistics, preserve_music}
 {
   m_levelfile = levelfile_;
-  if (restart_level(false, preserve_music) != 0)
-    throw std::runtime_error ("Initializing the level failed.");
 }
 
 void
