@@ -34,7 +34,7 @@ BoxWidget::BoxWidget(const Rectf& props, float padding_w, float padding_h) :
 }
 
 BoxWidget::BoxWidget(const Rectf& props, float padding) :
-  BoxWidget(props, std::move(padding), std::move(padding))
+  BoxWidget(std::move(props), std::move(padding), std::move(padding))
 { }
 
 void
