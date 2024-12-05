@@ -28,7 +28,7 @@
 
 class Rect;
 
-class Rectf final
+class Rectf
 {
 public:
   static Rectf from_center(const Vector& center, const Sizef& size)
@@ -164,11 +164,8 @@ public:
     return grown(border, border);
   }
 
-  // leave these two public to save the headaches of set/get functions for such
-  // simple things :)
-
-  Vector p1() const { return m_p1; }
-  Vector p2() const { return Vector(m_p1.x + m_size.width, m_p1.y + m_size.height); }
+  inline const Vector& p1() const { return m_p1; }
+  inline Vector p2() const { return Vector(m_p1.x + m_size.width, m_p1.y + m_size.height); }
 
   void set_p1(const Vector& p) {
     m_size = Sizef(m_size.width + (m_p1.x - p.x),

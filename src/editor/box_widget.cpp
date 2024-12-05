@@ -26,7 +26,7 @@
 #include "supertux/resources.hpp"
 
 BoxWidget::BoxWidget(const Rectf& props, float padding_w, float padding_h) :
-  m_box{props},
+  Rectf{props},
   m_padding_w{padding_w},
   m_padding_h{padding_h},
   m_is_hovered{false}
@@ -59,7 +59,7 @@ BoxWidget::on_window_resize()
 
 const Rectf BoxWidget::box()
 {
-  return m_box.grown(m_padding_w, m_padding_h);
+  return grown(m_padding_w, m_padding_h);
 }
 
 

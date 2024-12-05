@@ -30,7 +30,7 @@
 #include "sprite/sprite.hpp"
 #include "sprite/sprite_manager.hpp"
 
-class BoxWidget : public Widget
+class BoxWidget : public Widget, public Rectf
 {
 public:
   BoxWidget(const Rectf& box_props, float padding = 0.0f);
@@ -50,9 +50,6 @@ public:
   /** @return Return box with applied properties, meaning the paddings are calculated, etc. */
   const Rectf box();
   inline bool hovered() { return m_is_hovered; }
-  
-protected:
-  Rectf m_box;
   
 private:
   float m_padding_w, m_padding_h;

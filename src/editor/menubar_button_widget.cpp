@@ -35,8 +35,8 @@ EditorMenubarButtonWidget::EditorMenubarButtonWidget(const std::string& text, fl
   BoxWidget{Rectf{Vector{x_pos_inc, 8.0f}, Vector{0, 0}}, H_OFF_W, H_OFF_H},
 	m_text{text}
 {
-	m_box.set_size(Resources::normal_font->get_text_width(text),
-	               Resources::normal_font->get_text_height(text));
+	set_size(Resources::normal_font->get_text_width(text),
+	         Resources::normal_font->get_text_height(text));
 	x_pos_inc += PADDING_X + box().get_width();
 }
 
@@ -44,7 +44,7 @@ void
 EditorMenubarButtonWidget::draw(DrawingContext& context)
 {
 	context.color().draw_text(
-		Resources::normal_font, m_text, m_box.p1(), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
+		Resources::normal_font, m_text, p1(), ALIGN_LEFT, 999999, Color(1.0f, 1.0f, 1.0f, 1.0f));
 	
 	if (hovered())
 		context.color().draw_filled_rect(box(), g_config->editorhovercolor, (g_config->menuroundness / 3.0f + 4.0f),

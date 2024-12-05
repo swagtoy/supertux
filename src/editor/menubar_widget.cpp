@@ -63,7 +63,7 @@ EditorMenubarWidget::setup()
 	menubar_add("Info");
 	menubar_add("Help");
 	
-	m_box.set_width(x_pos + 3.0f);
+	set_width(x_pos + 3.0f);
 }
 
 void
