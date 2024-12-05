@@ -19,14 +19,15 @@
 
 #include "editor/box_widget.hpp"
 
+// TODO: Very basic spacing for now, no weights or margins or anything
+//  crazy of the sorts yet. Sorry!
 class ContainerWidget : public BoxWidget
 {
 public:
   ContainerWidget(const Rectf& props);
   ~ContainerWidget() = default;
   
-  // Bare in mind, we can add ourselves!
-  void add(const BoxWidget& widget);
+  void add(BoxWidget* const box);
   
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;
@@ -37,8 +38,11 @@ public:
   virtual bool on_mouse_button_up(const SDL_MouseButtonEvent& button) override;
   virtual bool on_mouse_button_down(const SDL_MouseButtonEvent& button) override;
   virtual bool on_mouse_motion(const SDL_MouseMotionEvent& motion) override;
+  
 private:
-  std::vector<BoxWidget> m_widgets;
+  std::vector<std::unique_ptr<BoxWidget>> m_widgets;
+  // Probably won't exist forever
+  float m_spacing;
   bool m_is_horizontal;
 };
 

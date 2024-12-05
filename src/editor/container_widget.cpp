@@ -19,22 +19,36 @@
 ContainerWidget::ContainerWidget(const Rectf& props) :
   BoxWidget{props},
   m_widgets(),
+  m_spacing(),
   m_is_horizontal(false)
 { }
 
 void
 ContainerWidget::draw(DrawingContext& ctx)
 {
+  float pos = 0.f;
+  for (const auto& widget : m_widgets)
+  {
+    const Rectf& r = widget->box();
+    widget->draw(ctx);
+  }
 }
 
 void
 ContainerWidget::update(float dt_sec)
 {
+  m_spacing = static_cast<float>(m_widgets.size());
+  for (auto&& widget : m_widgets)
+  {
+    const Rectf& other = widget->box();
+    // TODO: other->set_{width,height}(m_spacing)
+  }
 }
 
 void
-ContainerWidget::add(const BoxWidget& box)
+ContainerWidget::add(BoxWidget* const box)
 {
+  m_widgets.emplace_back(box);
 }
 
 void
