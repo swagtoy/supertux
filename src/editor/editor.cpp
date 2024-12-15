@@ -376,10 +376,12 @@ Editor::test_level(const std::optional<std::pair<std::string, Vector>>& test_pos
   Tile::draw_editor_images = false;
   Compositor::s_render_lighting = true;
   
-  if (m_level && m_levelfile.empty() || m_levelfile == "")
+  m_leveltested = true;
+  // Just a temporary (or broken, worst case) level; don't attempt to save, just play.
+  if ((m_level && m_levelfile.empty()) || m_levelfile == "")
   {
-  	GameManager::current()->start_level(m_level.get(), test_pos);
-	return;
+    GameManager::current()->start_level(m_level.get(), test_pos);
+    return;
   }
   
   std::string backup_filename = get_autosave_from_levelname(m_levelfile);
@@ -395,9 +397,9 @@ Editor::test_level(const std::optional<std::pair<std::string, Vector>>& test_pos
   }
 
   m_autosave_levelfile = FileSystem::join(directory, backup_filename);
+  // TODO: what if saving fails?
   m_level->save(m_autosave_levelfile);
   m_time_since_last_save = 0.f;
-  m_leveltested = true;
 
   if (!m_level->is_worldmap())
   {
