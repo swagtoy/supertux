@@ -14,8 +14,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
-#define HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
+#ifndef HEADER_SUPERTUX_EDITOR_CONTAINER_WIDGET_HPP
+#define HEADER_SUPERTUX_EDITOR_CONTAINER_WIDGET_HPP
 
 #include <vector>
 #include "editor/box_widget.hpp"
@@ -28,7 +28,7 @@ public:
   ContainerWidget(const Rectf& props);
   ~ContainerWidget() = default;
   
-  void add(BoxWidget* const box);
+  void add(BoxWidget* box);
   
   virtual void draw(DrawingContext& context) override;
   virtual void update(float dt_sec) override;

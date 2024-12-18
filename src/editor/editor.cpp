@@ -136,7 +136,6 @@ Editor::Editor() :
   m_ctrl_pressed(false),
   m_mouse_pos(0.f, 0.f)
 {
-  // TODO wtf? Allocate these things directly in the vector, then set pointers as needed. Not this shit.
   auto toolbox_widget = std::make_unique<EditorToolboxWidget>(*this);
   auto layers_widget = std::make_unique<EditorLayersWidget>(*this);
   auto overlay_widget = std::make_unique<EditorOverlayWidget>(*this);

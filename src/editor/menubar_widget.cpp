@@ -16,6 +16,7 @@
 
 #include "menubar_widget.hpp"
 
+#include "editor/button_widget.hpp"
 #include "supertux/gameconfig.hpp"
 #include "supertux/globals.hpp"
 #include "video/viewport.hpp"

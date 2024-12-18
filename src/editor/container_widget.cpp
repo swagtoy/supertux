@@ -46,7 +46,7 @@ ContainerWidget::update(float dt_sec)
 }
 
 void
-ContainerWidget::add(BoxWidget* const box)
+ContainerWidget::add(BoxWidget* box)
 {
   m_widgets.emplace_back(box);
 }
@@ -54,5 +54,29 @@ ContainerWidget::add(BoxWidget* const box)
 void
 ContainerWidget::setup()
 {
+  
+}
+
+void
+ContainerWidget::on_window_resize()
+{
+}
+
+bool
+ContainerWidget::on_mouse_button_up(const SDL_MouseButtonEvent& button)
+{
+  return false;
+}
+
+bool
+ContainerWidget::on_mouse_button_down(const SDL_MouseButtonEvent& button) 
+{
+  return false;
+}
+
+bool
+ContainerWidget::on_mouse_motion(const SDL_MouseMotionEvent& motion)
+{
+  return false;
 }
 
