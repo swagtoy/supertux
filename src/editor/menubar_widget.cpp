@@ -14,7 +14,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "editor/menubar_widget.hpp"
+#include "menubar_widget.hpp"
 
 #include "supertux/gameconfig.hpp"
 #include "supertux/globals.hpp"
@@ -23,6 +23,7 @@
 #include "supertux/resources.hpp"
 #include "util/log.hpp"
 #include "math/util.hpp"
+#include "editor/container_widget.hpp"
 
 EditorMenubarWidget::EditorMenubarWidget() :
   // We use -menuroundness to essentially hide the top-left, bottom-left, and top-right rounded corners. Hack.

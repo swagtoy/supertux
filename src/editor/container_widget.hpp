@@ -17,6 +17,7 @@
 #ifndef HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
 #define HEADER_SUPERTUX_EDITOR_MENUBAR_BUTTON_WIDGET_HPP
 
+#include <vector>
 #include "editor/box_widget.hpp"
 
 // TODO: Very basic spacing for now, no weights or margins or anything
