@@ -2374,7 +2374,7 @@ Player::collision_solid(const CollisionHit& hit)
   }
 
   if (hit.crush)
-    kill(false);
+    kill(true);
 
   if ((hit.left && m_boost < 0.f) || (hit.right && m_boost > 0.f))
     m_boost = 0.f;
@@ -2495,6 +2495,8 @@ Player::kill(bool completely)
     }
 
     SoundManager::current()->play("sounds/kill.wav", get_pos());
+
+    if (m_stone) stop_rolling(false);
 
     m_physic.enable_gravity(true);
     m_physic.set_gravity_modifier(1.0f); // Undo jump_early_apex

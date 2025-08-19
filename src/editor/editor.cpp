@@ -982,7 +982,7 @@ Editor::setup()
 #if 0
     if (AddonManager::current()->is_old_addon_enabled()) {
       auto dialog = std::make_unique<Dialog>();
-      dialog->set_text(_("Some obsolete add-ons are still active\nand might cause collisions with default Super Tux structure.\nYou can still enable these add-ons in the menu.\nDisabling these add-ons will not delete your game progress."));
+      dialog->set_text(_("Some obsolete add-ons are still active\nand might cause collisions with the default SuperTux structure.\nYou can still enable these add-ons in the menu.\nDisabling these add-ons will not delete your game progress."));
       dialog->clear_buttons();
 
       dialog->add_default_button(_("Disable add-ons"), [] {
@@ -1301,14 +1301,10 @@ Editor::get_status() const
   status.m_details.push_back("In Editor");
   if (!g_config->hide_editor_levelnames && m_level)
   {
-    if (m_level->is_worldmap())
-    {
-      status.m_details.push_back("Editing worldmap: " + m_level->get_name());
-    }
-    else
-    {
-      status.m_details.push_back("Editing level: " + m_level->get_name());
-    }
+    std::string level_type = (m_level->is_worldmap() ? "worldmap" : "level");
+    std::string status_text = "Editing " + level_type + ": " + m_level->get_name();
+    
+    status.m_details.push_back(status_text);
   }
   return status;
 }
